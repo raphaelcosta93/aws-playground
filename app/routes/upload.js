@@ -1,5 +1,6 @@
-const express = require('express');
-const multer  = require('multer');
+const express            = require('express');
+const multer             = require('multer');
+const { randomUUID }     = require('crypto');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const router = express.Router();
@@ -11,7 +12,7 @@ const BUCKET = process.env.S3_BUCKET;
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const file = req.file;
-    const key  = 'images/' + crypto.randomUUID() + '/' + file.originalname;
+    const key  = 'images/' + randomUUID() + '/' + file.originalname;
 
     await s3.send(new PutObjectCommand({
       Bucket:      BUCKET,
