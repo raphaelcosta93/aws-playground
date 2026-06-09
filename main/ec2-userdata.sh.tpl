@@ -52,7 +52,38 @@ server {
 }
 EOF
 
-# Remove default NGINX page and start NGINX
-rm -f /etc/nginx/conf.d/default.conf
+# Replace nginx.conf to remove the built-in default server block,
+# which conflicts with app.conf and takes priority over it on Amazon Linux 2023.
+cat > /etc/nginx/nginx.conf << 'EOF'
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /run/nginx.pid;
+
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    keepalive_timeout   65;
+    types_hash_max_size 4096;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
+
 systemctl enable nginx
 systemctl start nginx
