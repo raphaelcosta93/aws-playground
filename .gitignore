@@ -19,3 +19,7 @@ crash.*.log
 # AWS credentials — should never be in a repo
 .env
 *.pem
+
+# Lambda build artifacts — installed for linux/x64, not your local platform
+lambda/node_modules/
+lambda.zip

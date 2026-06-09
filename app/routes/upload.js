@@ -12,7 +12,7 @@ const BUCKET = process.env.S3_BUCKET;
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const file = req.file;
-    const key  = 'images/' + randomUUID() + '/' + file.originalname;
+    const key  = 'images/original/' + randomUUID() + '/' + file.originalname;
 
     await s3.send(new PutObjectCommand({
       Bucket:      BUCKET,

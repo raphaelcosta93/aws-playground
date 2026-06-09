@@ -34,3 +34,20 @@ resource "aws_s3_bucket_public_access_block" "app" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "app" {
+  bucket = aws_s3_bucket.app.id
+
+  rule {
+    id     = "expire-originals"
+    status = "Enabled"
+
+    filter {
+      prefix = "images/original/"
+    }
+
+    expiration {
+      days = 1
+    }
+  }
+}
