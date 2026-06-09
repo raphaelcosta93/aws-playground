@@ -1,4 +1,3 @@
-# Fetch the latest Amazon Linux 2023 AMI automatically
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -19,14 +18,16 @@ resource "aws_instance" "web" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_a.id
   vpc_security_group_ids = [aws_security_group.ec2.id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
+  key_name               = "aws-learning-key"
 
-  user_data = <<-EOF
-    #!/bin/bash
-    dnf install -y nginx
-    systemctl enable nginx
-    systemctl start nginx
-    echo "<h1>Hello from ${var.project_name}</h1>" > /usr/share/nginx/html/index.html
-  EOF
+  user_data = templatefile("${path.module}/ec2-userdata.sh.tpl", {
+    region       = var.aws_region
+    s3_bucket    = aws_s3_bucket.app.id
+    dynamo_table = aws_dynamodb_table.images.name
+  })
+
+  user_data_replace_on_change = true
 
   tags = {
     Name      = "${var.project_name}-web"

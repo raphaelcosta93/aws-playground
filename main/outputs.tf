@@ -17,3 +17,13 @@ output "cloudwatch_log_group" {
   description = "Name of the CloudWatch log group"
   value       = aws_cloudwatch_log_group.app.name
 }
+
+output "dynamodb_table_name" {
+  description = "Name of the DynamoDB images table"
+  value       = aws_dynamodb_table.images.name
+}
+
+output "alb_dns_name" {
+  description = "ALB DNS name — open this in your browser"
+  value       = aws_lb.main.dns_name
+}

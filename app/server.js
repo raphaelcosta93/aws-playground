@@ -9,7 +9,15 @@ const imagesRouter = require('./routes/images');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      upgradeInsecureRequests: null,
+    },
+  },
+  strictTransportSecurity: false,
+}));
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
