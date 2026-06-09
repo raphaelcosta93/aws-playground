@@ -14,6 +14,7 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       upgradeInsecureRequests: null,
+      imgSrc: ["'self'", 'data:', 'https://*.amazonaws.com'],
     },
   },
   strictTransportSecurity: false,
