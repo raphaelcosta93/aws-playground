@@ -4,12 +4,12 @@ resource "null_resource" "lambda_dependencies" {
   }
 
   provisioner "local-exec" {
-    command     = "npm install"
+    command     = "rm -rf node_modules && npm install"
     working_dir = "${path.module}/../lambda"
     environment = {
-      npm_config_platform = "linux"
-      npm_config_arch     = "x64"
-      npm_config_libc     = "glibc"
+      npm_config_os   = "linux"
+      npm_config_cpu  = "x64"
+      npm_config_libc = "glibc"
     }
   }
 }
