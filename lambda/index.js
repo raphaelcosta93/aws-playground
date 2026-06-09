@@ -49,6 +49,7 @@ exports.handler = async (event) => {
       image_id:    imageId,
       s3_key:      resizedKey,
       filename:    filename,
+      size:        resizedBuffer.length,
       uploaded_at: new Date().toISOString(),
     },
   }));
